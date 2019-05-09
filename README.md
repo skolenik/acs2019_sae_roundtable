@@ -37,7 +37,7 @@ _Composite estimate_
   * http://www.census.gov/did/www/saipe/
 - National Cancer Institute: Small Area Estimates for Cancer Risk Factors and Screening Behaviors
   * States, Counties
-  * Combines BRFSS and NHIS (Raghunathan et al. 2007)[https://www.jstor.org/stable/27639878]
+  * Combines BRFSS and NHIS [Raghunathan et al. 2007](https://www.jstor.org/stable/27639878)
   * http://sae.cancer.gov/
 - National Center for Health Statistics: NHIS phone use data
   * https://www.cdc.gov/nchs/data/nhis/earlyrelease/Wireless_state_201712.pdf
@@ -56,7 +56,7 @@ fully account for both sample selection and outcome variation. With a single wei
 becomes the group-wise ratio estimator described above.
 
 A strengthed version of the method is due to 
-(Lehtonen and Veijanen (2019))[http://isi-iass.org/home/wp-content/uploads/Survey_Statistician_January_2019.pdf].
+([Lehtonen and Veijanen (2019)](http://isi-iass.org/home/wp-content/uploads/Survey_Statistician_January_2019.pdf)).
 In their approach, they fit a model (based on the survey data) to the outcome using predictors available 
 for the whole population (assuming availability of the population register), obtain predictions,
 calibrate the sample to predictions (i.e. reweight the sample so that the weighted sample total of predictions
@@ -70,7 +70,7 @@ with the actual outcomes.
 ### Multilevel regression with post-stratification
 
 This method (MRP) originated in political science 
-((Park, Gelman and Bafumi 2004)[http://www.stat.columbia.edu/~gelman/research/published/parkgelmanbafumi.pdf]),
+([Park, Gelman and Bafumi 2004](http://www.stat.columbia.edu/~gelman/research/published/parkgelmanbafumi.pdf)),
 and has also become popular in health sciences. In this method, a multilevel/mixed model 
 of the following structure is fit to **unweighted** survey data:
 
@@ -95,13 +95,13 @@ A possible simplification of the model is to forgo the multilevel modeling, and/
 
 Book length treatments:
 
-Rao, J. N. K. (2003) _Small Area Estimation_. Wiley. (Amazon)[https://www.amazon.com/Small-Area-Estimation-J-Rao/dp/0471413747]
+Rao, J. N. K. (2003) _Small Area Estimation_. Wiley. [Amazon](https://www.amazon.com/Small-Area-Estimation-J-Rao/dp/0471413747)
 
 Rao, J. N. K., and I. Molina (2015). _Small Area Estimation_: 2nd edition. Wiley. 
-(Amazon)[https://www.amazon.com/Small-Estimation-Wiley-Survey-Methodology/dp/1118735781]
+[Amazon](https://www.amazon.com/Small-Estimation-Wiley-Survey-Methodology/dp/1118735781)
 
 Longford, N. T. (2005). _Missing Data and Small-Area Estimation: Modern analytical equipment for the survey statistician_.
-Springer. (Amazon)[https://www.amazon.com/Missing-Data-Small-Area-Estimation-Statistician/dp/1852337605]
+Springer. [Amazon](https://www.amazon.com/Missing-Data-Small-Area-Estimation-Statistician/dp/1852337605)
  
 Pratesi, M. (editor) (2016). _Analysis of Poverty Data by Small Area Estimation_. Wiley.
-(Amazon)[https://www.amazon.com/Analysis-Poverty-Estimation-Survey-Methodology/dp/1118815017]
+[Amazon](https://www.amazon.com/Analysis-Poverty-Estimation-Survey-Methodology/dp/1118815017)
