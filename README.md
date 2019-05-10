@@ -2,6 +2,8 @@
 
 **Materials for the small area estimation roundtable at ACS 2019 Data Users Group meeting**
 
+<img src=ACS_2019_SAE_roundtable.png height=200>
+
 In many social, behavioral or health studies, there may be interest in obtaining estimates for small subgroups of population
 
 - National studies: estimates may be desired for
