@@ -1,16 +1,31 @@
+---
+title: "Small area estimation"
+author: "Stas Kolenikov"
+date: "May 13, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 # Small Area Estimation
 
 **Materials for the small area estimation roundtable at ACS 2019 Data Users Group meeting**
 
-<img src=ACS_2019_SAE_roundtable.png height=200>
+```{r qr, out.width='200px'}
+knitr::include_graphics("ACS_2019_SAE_roundtable.png")
+```
 
 In many social, behavioral or health studies, there may be interest in obtaining estimates for small subgroups of population
 
 - National studies: estimates may be desired for
-  * states
-  * counties
-  * school districts
-  * metro areas 
+  
+    * states
+    * counties
+    * school districts
+    * metro areas 
+
 - Statewide studies: estimates for counties, cities, health service areas
 - City-wide studies: estimates for neighborhoods
 - Establishment sureys: detailed industry by size by region classifications
@@ -38,14 +53,19 @@ _Composite estimate_: an estimate that combines both a direct estimate and a syn
 ## Examples
 
 - Census Bureau: Small Area Income and Poverty Estimates
-  * States, Counties, School districts
-  * http://www.census.gov/did/www/saipe/
+
+    * States, Counties, School districts
+    * http://www.census.gov/did/www/saipe/
+
 - National Cancer Institute: Small Area Estimates for Cancer Risk Factors and Screening Behaviors
-  * States, Counties
-  * Combines BRFSS and NHIS [Raghunathan et al. 2007](https://www.jstor.org/stable/27639878)
-  * http://sae.cancer.gov/
+
+    * States, Counties
+    * Combines BRFSS and NHIS [Raghunathan et al. 2007](https://www.jstor.org/stable/27639878)
+    * http://sae.cancer.gov/
+
 - National Center for Health Statistics: NHIS phone use data
-  * https://www.cdc.gov/nchs/data/nhis/earlyrelease/Wireless_state_201712.pdf
+
+    * https://www.cdc.gov/nchs/data/nhis/earlyrelease/Wireless_state_201712.pdf
 
 ## Methodologies
 
@@ -55,18 +75,45 @@ Groupwise ratio estimator applies means or proportions of the outcome in a popul
 to the population of the small area of interest.
 
 1. Split large sample into groups (e.g., age-gender-education), _g_ = 1; ... ;_G_
-2. Estimate the nationwide mean outcome in each group y<sub>g</sub> = weighted mean in this group.
-3. Apply the small area proportions of all groups as weights to obtain the SAE estimate
+2. Estimate the nationwide mean outcome in each group ($j$ enumerates survey observations):
+$$
+\bar y_g = \frac{\sum_{j \in g} y_j w_j }{\sum_{j \in g}w_j} 
+$$
+where $y_j$ is the outcome observation for unit $j$, and $g$ is the group variable.
+
+3. Apply the small area $i$ group counts/proportions as weights to obtain the SAE estimate:
+$$
+\hat y_i = \frac{\sum_g \bar y_g N_{ig}}{\sum_g N_{ig}} 
+$$
+where $N_{ig}$ is the population count of group $g$ in area $i$. (Viewed differently,
+if $W_{ig} = N_{ig}/N_i,N_i = \sum_g N_{ig}$ is the population proportion of group $g$ in area $i$,
+$\hat y_i = \sum_g W_{ig} \hat y_g$.)
 
 This produces a synthetic estimate, i.e., the one that is based only on the aggregate data.
 The implicit statistical model is that the outcome is constant within cells defined by the groups.
+
+_Data requirements_: 
+
+- Survey data:
+
+    + Outcome of interest _y_ 
+    + Identifiers of the groups _g_
+
+- Population data:  
+
+    + Identifiers of the small areas
+    + Population counts in categories of _g_ for each area _i_
 
 ### Weighting/calibration
 
 In this method, the estimates are obtained by (re-)weighting the sample data to the socio-demographic
 characteristics of the area of interest. Estimates can be expected to be biased unless the weighting variables
-fully account for both sample selection and outcome variation. With a single weighting variable, the method
+fully account for both sample selection and outcome variation. With only single weighting variable, the method
 becomes the group-wise ratio estimator described above.
+
+Both groupwise ratio estimation and reweighting approach produce synthetic estimates only,
+and hence can produce estimates that are biased and not design-consistent (i.e., as the sample sizes
+of areas increase, the estimates may not converge to their population counterparts).
 
 A strengthed version of the method is due to 
 ([Lehtonen and Veijanen (2019)](http://isi-iass.org/home/wp-content/uploads/Survey_Statistician_January_2019.pdf)).
@@ -77,40 +124,118 @@ is equal to the population total of predictions), and obtain calibrated estimate
 with the actual outcomes.
 
 _Data requirements_: 
+
 - Survey data:
-  + Outcome of interest _y_ 
-  + Identifiers of the small areas
-  + Weighting variables _x_
+
+    + Outcome of interest _y_ 
+    + Identifiers of the small areas
+    + Weighting variables _x_
+
 - Population data:  
-  + Identifiers of the small areas
-  + Population counts in categories of _x_
+
+    + Identifiers of the small areas
+    + Population counts in categories of _x_
 
 ### Area models
 
 Area SAE models fit regression models to the area-level direct estimates, thus smoothing them.
+Denote the true value in area $i$ as $\theta_i$. Then 
+the direct estimates for areas $i$,
+$$
+\bar y_i = \frac{\sum_{j \in i} w_i y_i}{\sum_{j \in i} w_i y_i}
+$$
+can be thought of the true value plus the _sampling_ error:
+$$
+\hat y_i = \theta_i + e_i
+$$
+where the magnitude of the error $e_i$ can be obtained through the standard survey estimation
+procedures, $\mathbb{V}_d[e_i] = \psi_i$, where subscript $d$ denotes variances with respect 
+to the sampling Design and e.g. will be smaller in the areas that have larger sample sizes.
+
+Auxiliary information on area characteristics $x_i$ is brought in through a regression model of the form
+$$
+\theta_i = x_i \beta + v_i
+$$
+where $v_i$ is the _model_ error that satifies the standard regression modeling assumptions
+(e.g., that $v_i$ are independent in different areas, and that their variance is constant, 
+$\mathbb{V}_m[v_i]=\sigma_v^2$, where the subscript $m$ denots variance in the statistical Model).
+Oftentimes, a transformation is applied to $\hat y_i$. E.g. when $y_i \equiv p_i$ is a proportion,
+the variance of the estimate is $p_i(1-p_i)$ divided by the (effective) sample size, i.e., not constant.
+The arcsine transformation $\arcsin \sqrt{p_i}$ makes the variance approximately constant,
+at the expense of making the model more complicated.
+
+Once the regression model parameters $\beta$ are estimated, the _synthetic_ estimates
+are obtained as $x_i \hat\beta$. The _composite_ estimates can now be obtained as
+$$
+\tilde\theta_i = \gamma_i \bar y_i + (1-\gamma_i) x_i \beta
+$$
+where $\gamma_i$ is the compositing factor, which is the weight of the direct estimate
+in the final estimate:
+$$
+\gamma_i = \frac{\sigma_v^2}{\psi_i + \sigma_v^2}
+$$
+For areas with relatively large sample sizes, $\gamma_i$ should be expected
+to be close to 1 (because the variance of the direct estimates $\psi_i$ is relatively small), 
+while for areas with small sample sizes, close to 0, and equal to 0 for 
+areas that have zero sample size / not represented in the sample.
+
+Composite area models are design-consistent: as area sample sizes increase, the sampling variances
+$\psi_i$ go down, the compositing factors $\gamma_i$ increase to 1, and the properties of 
+the composite estimates resemble those of the direct estimates $\bar y_i$.
 
 _Data requirements_: 
-- Survey data:
-  + Outcome of interest _y_ 
-  + Identifiers of the small areas
-- Population data:  
-  + Area-level predictors
-  + Identifiers of the small areas
 
+- Survey data:
+
+    + Outcome of interest _y_ 
+    + Identifiers of the small areas
+    + Method to estimate sampling variances $\psi_i$
+
+- Population data:  
+
+    + Area-level predictors
+    + Identifiers of the small areas
 
 ### Unit models
 
 Unit SAE models fit regression or generalized linear models to the outcomes observed at the person level:
 
+$$
+y_{ij} = x_{ij}\beta + v_i + e_{ij}
+$$
+where $x_{ij}$ are person-level predictors (which could include area-level predictors that are constant
+for all individuals within an area), $v_i$ are area-level random effects, and $e_{ij}$ are person-level
+model errors. Just like for area models, one can obtain _synthetic_ estimates based on the model only,
+$\hat y_i = \bar X_i \hat\beta + \hat v_i$, where the area means $X_i$ are the means of predictor variables
+at the area level (e.g., based on population census or registers), and composite estimates 
+$$
+\tilde \theta_i = \bar X_i \hat\beta + \tilde v_i, \quad \tilde v_i = \gamma_i (\bar y_i - \bar x_i \hat \beta)
+$$
+where the random area effects are based on the _sample_ means of the outcomes $y_i$ and predictors $x_i$,
+and the compositing factor is
+$$
+\gamma_i = \frac{\sigma_v^2}{\sigma_v^2 + \sigma_e^2/n_i}
+$$
+To show how this synthetic estimator combines direct and synthetic estimates, it can be written as
+$$
+\tilde \theta_i =\gamma_i \bigl[ \bar y_i + (\bar X_i - \bar x_i) \hat \beta  \bigr] 
+ + (1-\gamma_i) \bar X_i \hat\beta
+$$
+
+
 _Data requirements_: 
 - Survey data:
-  + Outcome of interest _y_ 
-  + Predictors _x_ (e.g., demographic variables)
-  + Identifiers of the small areas
+
+    + Outcome of interest _y_ 
+    + Predictors _x_ (e.g., demographic variables)
+    + Identifiers of the small areas
+    + Procedures to fit multilevel/mixed models and estimate $\sigma_v^2$, $\sigma_e^2$.
+
 - Population data:  
-  + The same predictor variables _x_ for the small area as those used in the SAE model in the large data set
-    **for everybody in the population**
-  + Identifiers of the small areas
+
+    + The same predictor variables _x_ for the small area as those used in the SAE model in the large data set
+      **for everybody in the population**
+    + Identifiers of the small areas
 
 Both unit-level (i.e., person level) and area-level (e.g., county level) predictors are typically used.
 
@@ -138,6 +263,12 @@ These predictions are finally post-stratified by the population counts to the sm
 MRP thus combines ideas of multilevel unit models with the (re)weighting/groupwise estimation approach.
 
 A possible simplification of the model is to forgo the multilevel modeling, and/or empirical Bayes prediction of random effects.
+
+Popularity of the MRP model is partially explained by the lack of functionality in R to fit 
+mixed models with weighted data. Recently, a new package `WeMix` appeared that offers this functionality
+(see [the latest version on CRAN](https://cran.r-project.org/package=WeMix)). Also, this is one of the few
+Bayesian models that make some sense with weighted survey data, in that it offers a way to aggregate 
+(unweighted) Bayesian model predictions to the population.
 
 ## Online resources
 
@@ -188,7 +319,7 @@ Elsevier/North Holland, doi:10.1016/S0169-7161(09)00232-6.
 Pfeffermann, D. (2013). New Important Developments in Small Area Estimation. 
 [_Statistical Science_, 28 (1), 40--68](https://projecteuclid.org/euclid.ss/1359468408), doi:10.1214/12-STS395.
 
-### Best known framework papers
+### Major methods papers
 
 Fay, R. E., and R. A. Herriot (1977). 
 Estimates of Income for Small Places: An Application of James-Stein Procedures to Census Data.
