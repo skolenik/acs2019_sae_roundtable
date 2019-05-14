@@ -4,6 +4,8 @@
 
 <img src=ACS_2019_SAE_roundtable.png height=200>
 
+A more extended version can be seen [here](https://htmlpreview.github.io/?https://github.com/skolenik/acs2019_sae_roundtable/blob/master/acs2019_sae_roundtable.html)
+
 In many social, behavioral or health studies, there may be interest in obtaining estimates for small subgroups of population
 
 - National studies: estimates may be desired for
